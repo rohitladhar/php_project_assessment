@@ -3,6 +3,8 @@
 
 
 2.Run the program in terminal 
+
+
 php solution.php
 
 
