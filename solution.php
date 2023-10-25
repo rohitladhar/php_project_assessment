@@ -39,7 +39,9 @@ while(!feof($file))
         }
        
     } 
-    array_push($result,$single_elm);
+    if($elm[0]!=="brand_name"){
+        array_push($result,$single_elm);
+    }
 }
 
 fclose($file);
@@ -56,6 +58,7 @@ $helper = [
 ];
 $path = 'combination_count.csv';
 
+//print_r(count($result));
 for($i=0;count($result);$i++){
     if($i==0){
         $elm = $result[$i];
@@ -71,32 +74,15 @@ for($i=0;count($result);$i++){
         ];
     }
 
-    
-    if($i<count($result)-1){
-        $ele = $result[$i];
-        if($helper["make"]==$ele["make"]){
-            if($helper["model"]==$ele["model"]){
-                if($helper["colour"]==$ele["colour"]){
-                    if($helper["capacity"]==$ele["capacity"]){
-                        if($helper["network"]==$ele["network"]){
-                            if($helper["grade"]==$ele["grade"]){
-                                if($helper["condition"]==$ele["condition"]){ 
-                                    $helper["count"] = $helper["count"] + 1;  
-                                }
-                                else{
-                                    $fp = fopen($path, 'a'); 
-                                    fputcsv($fp, array_values($helper));
-                                    $helper = [
-                                        "make"=>$ele["make"],
-                                        "model"=>$ele["model"],
-                                        "colour"=>$ele["colour"],
-                                        "capacity"=>$ele["capacity"],
-                                        "network"=>$ele["network"],
-                                        "grade"=>$ele["grade"],
-                                        "condition"=>$ele["condition"],
-                                        "count"=>1
-                                    ];
-                                }
+    $ele = $result[$i];
+    if($helper["make"]==$ele["make"]){
+        if($helper["model"]==$ele["model"]){
+            if($helper["colour"]==$ele["colour"]){
+                if($helper["capacity"]==$ele["capacity"]){
+                    if($helper["network"]==$ele["network"]){
+                        if($helper["grade"]==$ele["grade"]){
+                            if($helper["condition"]==$ele["condition"]){ 
+                                $helper["count"] = $helper["count"] + 1;  
                             }
                             else{
                                 $fp = fopen($path, 'a'); 
@@ -172,7 +158,7 @@ for($i=0;count($result);$i++){
                     "count"=>1
                 ];
             }
-        } 
+        }
         else{
             $fp = fopen($path, 'a'); 
             fputcsv($fp, array_values($helper));
@@ -187,8 +173,24 @@ for($i=0;count($result);$i++){
                 "count"=>1
             ];
         }
+    } 
+    else{
+        if(strlen($ele["make"])==0){
+            break;  
+        }
+        $fp = fopen($path, 'a'); 
+        fputcsv($fp, array_values($helper));
+        $helper = [
+            "make"=>$ele["make"],
+            "model"=>$ele["model"],
+            "colour"=>$ele["colour"],
+            "capacity"=>$ele["capacity"],
+            "network"=>$ele["network"],
+            "grade"=>$ele["grade"],
+            "condition"=>$ele["condition"],
+            "count"=>1
+        ];
     }
-    
 }
 fclose($fp);
 echo "end of program";
